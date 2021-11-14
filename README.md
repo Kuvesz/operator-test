@@ -18,7 +18,7 @@ After that apply the ingress patch:
 ```
 kubectl patch deployment ingress-nginx-controller -n ingress-nginx --patch "$(cat ingress_local_patch.yaml)"
 ```
-Then deploy the application either with `make deploy` or by using an image from [here](https://hub.docker.com/repository/docker/kuvesz/nginx-kubernetes-operator) and running make with the following parameteres:
+Then deploy the application either with `make deploy` or by using an image from [here](https://github.com/Kuvesz/operator-test/pkgs/container/operator-test) and running make with the following parameteres:
 ```
 make deploy IMG=kuvesz/nginx-kubernetes-operator:latest
 ```
