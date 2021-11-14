@@ -1,0 +1,16 @@
+domain: kuvesz.sch
+layout:
+- go.kubebuilder.io/v3
+projectName: operator-test
+repo: kuvesz.sch/testoperator
+resources:
+- api:
+    crdVersion: v1
+    namespaced: true
+  controller: true
+  domain: kuvesz.sch
+  group: webapp
+  kind: TestOperator
+  path: kuvesz.sch/testoperator/api/v1
+  version: v1
+version: "3"

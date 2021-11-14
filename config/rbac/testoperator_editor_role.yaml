@@ -1,0 +1,24 @@
+# permissions for end users to edit testoperators.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: testoperator-editor-role
+rules:
+- apiGroups:
+  - webapp.kuvesz.sch
+  resources:
+  - testoperators
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - webapp.kuvesz.sch
+  resources:
+  - testoperators/status
+  verbs:
+  - get
