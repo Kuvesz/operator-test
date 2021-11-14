@@ -40,27 +40,15 @@ type TestOperatorSpec struct {
 
 type StatusPhase string
 
-const (
-	RunningStatusPhase StatusPhase = "RUNNING"
-	PendingStatusPhase StatusPhase = "PENDING"
-	ErrorStatusPhase   StatusPhase = "ERROR"
-)
-
 // TestOperatorStatus defines the observed state of TestOperator
 type TestOperatorStatus struct {
 	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
-	Phase           StatusPhase `json:"phase"`
-	CurrentReplicas *int32      `json:"currentReplicas,omitempty"`
-	DesiredReplicas int32       `json:"desiredRepicas"`
 }
 
 //+kubebuilder:object:root=true
 //+kubebuilder:subresource:status
 //+kubebuilder:subresource:scale:specpath=.spec.replicas,statuspath=.status.desiredReplicas
-//+kubebuilder:printcolumn:name="Phase",type=string,JSONPath=`.status.phase`
-//+kubebuilder:printcolumn:name="Current Replicas",type=integer,JSONPath=`.status.currentReplicas`
-//+kubebuilder:printcolumn:name="Desired Replicas",type=integer,JSONPath=`.status.desiredReplicas`
 //+kubebuilder:printcolumn:name="Host",type=string,JSONPath=`.spec.host`
 //+kubebuilder:printcolumn:name="Image",type=string,JSONPath=`.spec.image`
 

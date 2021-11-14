@@ -2,7 +2,8 @@ apiVersion: webapp.kuvesz.sch/v1
 kind: TestOperator
 metadata:
   name: testoperator-sample
+  namespace: default
 spec:
   replicas: 2
-  host: kuvesz.testing.hu
+  host: kuvesz.sch.bme.hu
   image: nginx:latest

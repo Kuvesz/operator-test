@@ -18,7 +18,6 @@ package controllers
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/go-logr/logr"
 	certmanager "github.com/jetstack/cert-manager/pkg/apis/certmanager/v1"
@@ -58,33 +57,23 @@ func (r *TestOperatorReconciler) Reconcile(ctx context.Context, req ctrl.Request
 		}
 
 		log.Error(err, "Unable to get resource!")
-		webapp.Status = createStatus(webappv1.ErrorStatusPhase, nil, webapp.Spec.Replicas)
-		r.Client.Status().Update(ctx, webapp)
 		return ctrl.Result{}, err
 	}
 
-	log.Info(fmt.Sprintf("received reconcile request for %q (namespace: %q)", webapp.GetName(), webapp.GetNamespace()))
-	webapp.Status = createStatus(webappv1.PendingStatusPhase, nil, webapp.Spec.Replicas)
 	r.Client.Status().Update(ctx, webapp)
 
 	err = r.reconcileWebapp(ctx, webapp, log)
 	if err != nil {
 		log.Error(err, "Failed to reconcile Webapp")
-		webapp.Status = createStatus(webappv1.ErrorStatusPhase, nil, webapp.Spec.Replicas)
-		r.Client.Status().Update(ctx, webapp)
 		return ctrl.Result{}, err
 	}
 
 	err = r.reconcileWebappIngress(ctx, webapp, log)
 	if err != nil {
 		log.Error(err, "Failed to reconcile Ingress")
-		webapp.Status = createStatus(webappv1.ErrorStatusPhase, nil, webapp.Spec.Replicas)
-		r.Client.Status().Update(ctx, webapp)
 		return ctrl.Result{}, err
 	}
 
-	webapp.Status = createStatus(webappv1.RunningStatusPhase, nil, webapp.Spec.Replicas)
-	r.Client.Status().Update(ctx, webapp)
 	return ctrl.Result{}, nil
 }
 
@@ -115,8 +104,6 @@ func (r *TestOperatorReconciler) reconcileWebapp(ctx context.Context, webapp *we
 	//I believe replicas are only need to be updated in case we already had the deployment
 	if webapp.Spec.Replicas != *foundDeployment.Spec.Replicas {
 		log.Info("Reconciling number of replicas")
-		webapp.Status = createStatus(webappv1.PendingStatusPhase, foundDeployment.Spec.Replicas, webapp.Spec.Replicas)
-		r.Client.Status().Update(ctx, webapp)
 		foundDeployment.Spec.Replicas = &webapp.Spec.Replicas
 
 		err = r.Update(ctx, foundDeployment)
@@ -243,16 +230,6 @@ func (r *TestOperatorReconciler) reconcileIngressCert(ctx context.Context, webap
 	log.Info("Skipping reconcile for Certificate as it already exists")
 
 	return nil
-}
-
-func createStatus(phase webappv1.StatusPhase, currentReplicas *int32, desiredRepicas int32) webappv1.TestOperatorStatus {
-
-	status := webappv1.TestOperatorStatus{
-		Phase:           phase,
-		CurrentReplicas: currentReplicas,
-		DesiredReplicas: desiredRepicas,
-	}
-	return status
 }
 
 // SetupWithManager sets up the controller with the Manager.

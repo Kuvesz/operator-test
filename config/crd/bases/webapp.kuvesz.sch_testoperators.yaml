@@ -17,15 +17,6 @@ spec:
   scope: Namespaced
   versions:
   - additionalPrinterColumns:
-    - jsonPath: .status.phase
-      name: Phase
-      type: string
-    - jsonPath: .status.currentReplicas
-      name: Current Replicas
-      type: integer
-    - jsonPath: .status.desiredReplicas
-      name: Desired Replicas
-      type: integer
     - jsonPath: .spec.host
       name: Host
       type: string
@@ -64,21 +55,6 @@ spec:
             type: object
           status:
             description: TestOperatorStatus defines the observed state of TestOperator
-            properties:
-              currentReplicas:
-                format: int32
-                type: integer
-              desiredRepicas:
-                format: int32
-                type: integer
-              phase:
-                description: 'INSERT ADDITIONAL STATUS FIELD - define observed state
-                  of cluster Important: Run "make" to regenerate code after modifying
-                  this file'
-                type: string
-            required:
-            - desiredRepicas
-            - phase
             type: object
         type: object
     served: true
