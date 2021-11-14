@@ -17,10 +17,6 @@ limitations under the License.
 package controllers
 
 import (
-	"encoding/base64"
-	"io/ioutil"
-	"os"
-
 	acme "github.com/jetstack/cert-manager/pkg/apis/acme/v1"
 	certmanager "github.com/jetstack/cert-manager/pkg/apis/certmanager/v1"
 	meta "github.com/jetstack/cert-manager/pkg/apis/meta/v1"
@@ -32,49 +28,6 @@ import (
 	webappv1 "kuvesz.sch/testoperator/api/v1"
 	ctrl "sigs.k8s.io/controller-runtime"
 )
-
-func (r *TestOperatorReconciler) createSecret(webapp *webappv1.TestOperator) (*corev1.Secret, error) {
-	/*
-		apiVersion: v1
-		kind: Secret
-		metadata:
-		  name: regcred
-		  namespace: [namespace]
-		data:
-		  .dockerconfigjson: [base64 encoded file from $HOME/.docker/config.json]
-		type: kubernetes.io/dockerconfigjson
-	*/
-	homedir, err := os.UserHomeDir()
-	if err != nil {
-		return nil, err
-	}
-	content, err := ioutil.ReadFile(homedir + "/.docker/config.json")
-	if err != nil {
-		return nil, err
-	}
-	encodedFile := make([]byte, base64.StdEncoding.EncodedLen(len(content)))
-	base64.StdEncoding.Encode(encodedFile, []byte(content))
-	secret := corev1.Secret{
-		TypeMeta: metav1.TypeMeta{
-			APIVersion: corev1.SchemeGroupVersion.String(),
-			Kind:       "Secret",
-		},
-		ObjectMeta: metav1.ObjectMeta{
-			Name:      "regcred",
-			Namespace: webapp.Namespace,
-		},
-		Data: map[string][]byte{
-			corev1.DockerConfigJsonKey: encodedFile,
-		},
-		Type: corev1.SecretTypeDockerConfigJson,
-	}
-
-	if err := ctrl.SetControllerReference(webapp, &secret, r.Scheme); err != nil {
-		return &secret, err
-	}
-
-	return &secret, nil
-}
 
 func (r *TestOperatorReconciler) createDeployment(webapp *webappv1.TestOperator) (*appsv1.Deployment, error) {
 	/*
@@ -106,8 +59,6 @@ func (r *TestOperatorReconciler) createDeployment(webapp *webappv1.TestOperator)
 				- name: https
 		          containerPort: 443
 		          protocol: TCP
-			  imagePullSecrets:
-			  - name: regcred
 	*/
 	deployment := appsv1.Deployment{
 		TypeMeta: metav1.TypeMeta{
@@ -145,11 +96,6 @@ func (r *TestOperatorReconciler) createDeployment(webapp *webappv1.TestOperator)
 									Protocol:      corev1.ProtocolTCP,
 								},
 							},
-						},
-					},
-					ImagePullSecrets: []corev1.LocalObjectReference{
-						{
-							Name: "regcred",
 						},
 					},
 				},

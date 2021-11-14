@@ -22,9 +22,4 @@ Then deploy the application by using an image from [here](https://github.com/Kuv
 ```
 make deploy IMG=[IMAGE NAME HERE]
 ```
-Be warned, that to use images on github docker login is needed:
-```
-docker login ghcr.io
-kubectl create secret generic regcred --from-file=.dockerconfigjson="$HOME/.docker/config.json" --type=kubernetes.io/dockerconfigjson
-```
 After this a yaml is needed to configure and run the service. An example of that can be found under `config/samples`.
