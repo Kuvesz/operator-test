@@ -44,6 +44,9 @@ type TestOperatorReconciler struct {
 //+kubebuilder:rbac:groups=webapp.kuvesz.sch,resources=testoperators/finalizers,verbs=update
 //+kubebuilder:rbac:groups=apps,resources=deployments,verbs=list;watch;get;create;update;patch;delete
 //+kubebuilder:rbac:groups=core,resources=services,verbs=list;watch;get;create;update;patch;delete
+//+kubebuilder:rbac:groups=networking.k8s.io,resources=ingresses,verbs=get;list;watch;create;update;patch;delete
+//+kubebuilder:rbac:groups="",resources=services,verbs=get;list;watch;create;update;patch;delete
+//+kubebuilder:rbac:groups=cert-manager.io,resources=clusterissuers;certificates,verbs=get;list;watch;create;update;patch;delete
 
 // Reconcile is part of the main kubernetes reconciliation loop which aims to
 // move the current state of the cluster closer to the desired state.
