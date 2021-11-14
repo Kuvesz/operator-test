@@ -1,1 +1,25 @@
-# operator-test
+# Webapp Kubernetes Operator Example with TLS
+
+## Installation guide
+First Docker and kubectl needs to be installed:
+- [Docker installation instructions](https://docs.docker.com/engine/install/)
+- [kubectl installation instructions](https://kubernetes.io/docs/tasks/tools/)
+
+A working Kubernetes environment is also needed, for testing purposes k3s can be used. Install it with the following paramters:
+```
+curl -sfL https://get.k3s.io | sh -s - --write-kubeconfig-mode 644 --disable traefik
+```
+Next add the needed other extensions (ingress may differ in case of production grade environments):
+```
+kubectl apply -f https://github.com/jetstack/cert-manager/releases/download/v1.6.0/cert-manager.yaml
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/static/provider/baremetal/deploy.yaml
+```
+After that apply the ingress patch:
+```
+kubectl patch deployment ingress-nginx-controller -n ingress-nginx --patch "$(cat ingress_local_patch.yaml)"
+```
+Then deploy the application either with `make deploy` or by using an image from [here](https://hub.docker.com/repository/docker/kuvesz/nginx-kubernetes-operator) and runnig make with the following paramteres:
+```
+make deploy IMG=kuvesz/nginx-kubernetes-operator:latest
+```
+After this a yaml is needed to configure and run the service. An example of that can be found under `config/samples`.
