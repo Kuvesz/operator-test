@@ -13,4 +13,4 @@ kind: Kustomization
 images:
 - name: controller
   newName: ghcr.io/kuvesz/operator-test
-  newTag: main
+  newTag: 2021-11-14_19-41-39

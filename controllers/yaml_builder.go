@@ -59,6 +59,8 @@ func (r *TestOperatorReconciler) createDeployment(webapp *webappv1.TestOperator)
 				- name: https
 		          containerPort: 443
 		          protocol: TCP
+			  imagePullSecrets:
+			  - name: regcred
 	*/
 	deployment := appsv1.Deployment{
 		TypeMeta: metav1.TypeMeta{
@@ -96,6 +98,11 @@ func (r *TestOperatorReconciler) createDeployment(webapp *webappv1.TestOperator)
 									Protocol:      corev1.ProtocolTCP,
 								},
 							},
+						},
+					},
+					ImagePullSecrets: []corev1.LocalObjectReference{
+						{
+							Name: "regcred",
 						},
 					},
 				},

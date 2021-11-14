@@ -5,5 +5,5 @@ metadata:
   namespace: default
 spec:
   replicas: 2
-  host: kuvesz.sch.bme.hu
+  host: kuvesz.testing.hu
   image: nginx:latest
