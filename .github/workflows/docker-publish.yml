@@ -50,6 +50,14 @@ jobs:
         id: date
         run: echo "::set-output name=date::$(date +'%Y-%m-%d_%H-%M-%S')"
 
+      # Convert IMAGE_NAME env var to lowercase
+      # https://github.com/ASzc/change-string-case-action
+      - name: Change String Case
+        uses: ASzc/change-string-case-action@v2
+        id: image_name
+        with:
+          string: ${{ env.IMAGE_NAME }}
+
       # Build and push Docker image with Buildx (don't push on PR)
       # https://github.com/docker/build-push-action
       - name: Build and push Docker image
@@ -57,5 +65,5 @@ jobs:
         with:
           context: .
           push: ${{ github.event_name != 'pull_request' }}
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.date.outputs.date }}
+          tags: ${{ env.REGISTRY }}/${{ steps.image_name.outputs.lowercase }}:${{ steps.date.outputs.date }}
           labels: ${{ steps.meta.outputs.labels }}
