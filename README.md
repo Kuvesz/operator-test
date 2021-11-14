@@ -18,9 +18,9 @@ After that apply the ingress patch:
 ```
 kubectl patch deployment ingress-nginx-controller -n ingress-nginx --patch "$(cat ingress_local_patch.yaml)"
 ```
-Then deploy the application either with `make deploy` or by using an image from [here](https://github.com/Kuvesz/operator-test/pkgs/container/operator-test) and running make with the following parameteres:
+Then deploy the application by using an image from [here](https://github.com/Kuvesz/operator-test/pkgs/container/operator-test) and running make with the following parameteres:
 ```
-make deploy IMG=kuvesz/nginx-kubernetes-operator:latest
+make deploy IMG=[IMAGE NAME HERE]
 ```
 Be warned, that to use images on github docker login is needed:
 ```

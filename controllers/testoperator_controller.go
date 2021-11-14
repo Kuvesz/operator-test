@@ -78,6 +78,30 @@ func (r *TestOperatorReconciler) Reconcile(ctx context.Context, req ctrl.Request
 }
 
 func (r *TestOperatorReconciler) reconcileWebapp(ctx context.Context, webapp *webappv1.TestOperator, log logr.Logger) error {
+	secret, err := r.createSecret(webapp)
+	if err != nil {
+		return err
+	}
+
+	foundSecret := &corev1.Secret{}
+	err = r.Get(ctx, types.NamespacedName{Name: secret.Name, Namespace: secret.Namespace}, foundSecret)
+
+	if err != nil && errors.IsNotFound(err) {
+		log.Info("Creating a new Deployment")
+		err = r.Create(ctx, secret)
+
+		if err != nil {
+			return err
+		}
+
+		return nil
+
+	} else if err != nil {
+		return err
+	}
+
+	log.Info("Skipping reconcile for Secret as it already exists")
+
 	deployment, err := r.createDeployment(webapp)
 	if err != nil {
 		return err
