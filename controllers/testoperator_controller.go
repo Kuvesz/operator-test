@@ -106,7 +106,6 @@ func (r *TestOperatorReconciler) reconcileWebapp(ctx context.Context, webapp *we
 	}
 
 	log.Info("Skipping reconcile for Deployment as it already exists")
-	//I believe replicas are only need to be updated in case we already had the deployment
 	if webapp.Spec.Replicas != *foundDeployment.Spec.Replicas {
 		log.Info("Reconciling number of replicas")
 		foundDeployment.Spec.Replicas = &webapp.Spec.Replicas
